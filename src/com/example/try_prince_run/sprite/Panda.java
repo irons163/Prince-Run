@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.util.Log;
 
@@ -41,7 +42,6 @@ public class Panda extends Sprite{
     		List<Bitmap> rollFrames = new ArrayList<Bitmap>();
 
     List<Bitmap> jumpEffectFrames = new ArrayList<Bitmap>();
-    List<Bitmap> downFrames = new ArrayList<Bitmap>();
     Sprite jumpEffect;
     
     List<Bitmap> knifeEffectFrames = new ArrayList<Bitmap>();
@@ -106,20 +106,17 @@ public class Panda extends Sprite{
     	jumpEffectFrames.add(jumpEffectTexture);
     	jumpEffectTexture = GraphicsUtils.loadImage("assets/prince_run/animation/Hero01/Jump/jump_effect_04.png");
     	jumpEffectFrames.add(jumpEffectTexture);
-    	//DOWN
-    	Bitmap downTexture = GraphicsUtils.loadImage("assets/prince_run/animation/Hero01/Jump/Hero01_Jump_13.png");
-    	downFrames.add(downTexture);
-    	downTexture = GraphicsUtils.loadImage("assets/prince_run/animation/Hero01/Jump/Hero01_Jump_14.png");
-    	downFrames.add(downTexture);
     	
 //        Bitmap texture = runAtlas.textureNamed("panda_run_01")
     	 Bitmap texture = runFrames.get(0);
-        PointF size = new PointF(texture.getWidth(), texture.getHeight());
+        Point size = new Point(texture.getWidth(), texture.getHeight());
         setCollisionRectFEnable(true);
-        setBitmapAndAutoChangeWH(texture);
-        setCollisionRectF(getCollisionRectF().left+5, getCollisionRectF().top, getCollisionRectF().right-5, getCollisionRectF().bottom);
-        setCollisionOffsetX(5);
-        setCollisionRectFWidth(getCollisionRectF().width());
+//        setBitmapAndAutoChangeWH(texture);
+        setSize(size.x, size.y);
+        setBitmap(texture);
+        setCollisionRectF(getCollisionRectF().left+size.x/3, getCollisionRectF().top + size.y/5*2, getCollisionRectF().right-+size.x/3, getCollisionRectF().bottom);
+//        setCollisionOffsetX(5);
+//        setCollisionRectFWidth(getCollisionRectF().width());
         
         jumpEffect = new Sprite(-80,0,false);
         jumpEffect.setBitmapAndAutoChangeWH(jumpEffectFrames.get(0));
@@ -154,7 +151,7 @@ public class Panda extends Sprite{
         	this.addActionFPS("jump", (Bitmap[]) jumpFrames.toArray(new Bitmap[jumpFrames.size()]), new int[]{2,2,2,2,2,2,2,2,2}, false);
             this.setAction("jump");
 
-            MovementActionItemBaseReugularFPS jump = new MovementActionItemBaseReugularFPS(new MovementActionInfo(40, 2, 0, -60, "jump", true));
+            MovementActionItemBaseReugularFPS jump = new MovementActionItemBaseReugularFPS(new MovementActionInfo(40, 2, 0, -60, "jump"));
             jump.setMovementActionController(new MovementAtionController());
             jump.setTimerOnTickListener(new MovementAction.TimerOnTickListener() {
 				
@@ -234,27 +231,6 @@ public class Panda extends Sprite{
 				jumpEffect.setHidden(true);
 			}
 		})}));
-    }
-    
-    public void down(){
-    	if(this.action!=null && (this.action.getName().equals("jump") || this.action.getName().equals("down")) && !this.action.isFinish())
-    		return;
-
-    	this.addActionFPS("down", (Bitmap[]) downFrames.toArray(new Bitmap[downFrames.size()]), new int[]{2,2,2,2,2}, false);
-        this.setAction("down");
-        MovementAction down = new MovementActionItemBaseReugularFPS(new MovementActionInfo(40, 5, 0, 0, "down", true));
-        down.setMovementActionController(new MovementAtionController());
-        down.setTimerOnTickListener(new MovementAction.TimerOnTickListener() {
-			
-			@Override
-			public void onTick(float dx, float dy) {
-				// TODO Auto-generated method stub
-				Panda.this.move(dx, dy);
-			}
-		});
-        down.setName("down");
-        this.runMovementAction(down);
-        Log.e("Panda", "down.");
     }
     
     public void attack(){

@@ -109,7 +109,7 @@ public class GameScene extends EasyScene implements ProtocolMainscreen, ToolUICa
 //        self.physicsBody!.categoryBitMask = BitMaskType.scene
 //        self.physicsBody!.dynamic = false
         
-        panda = new Panda(210, 100, true);
+        panda = new Panda(210, 400, true);
         
         appleFactory = new AppleFactory(0, 0, CommonUtil.screenWidth, false);
         this.addAutoDraw(appleFactory);
@@ -227,16 +227,6 @@ public class GameScene extends EasyScene implements ProtocolMainscreen, ToolUICa
             appleFactory.process();
             
             checkCollistion();
-            
-            boolean isOnGround = false;
-            for(Platform platform : platformFactory.getPlatforms()){
-            	if(!platform.isHidden() && panda.getY()==platform.getY()-panda.getHeight() && platform.getX() <= panda.getCollisionRectF().left + panda.getCollisionRectF().width() && platform.getX() + platform.getWidth() >= panda.getCollisionRectF().left){
-            		isOnGround = true;
-            		break;
-            	}
-            }
-            if(!isOnGround)
-            	panda.down();
             
             if(isReadyToJump){
             	panda.jump(platformFactory);
@@ -438,20 +428,38 @@ public class GameScene extends EasyScene implements ProtocolMainscreen, ToolUICa
 //	        AudioUtil.playBackgroundMusic();
 	    }
 		
+		@Override
+		public boolean onSceneTouchEvent(MotionEvent event) {
+			// TODO Auto-generated method stub
+			if(event.getAction()==MotionEvent.ACTION_DOWN){
+				Log.e("Touch", "Down");
+				if (isLose) {
+		            reSet();
+		        }else{
+		            if (panda.status != Status.jump2) {
+//		            	AudioUtil.playJump();
+		            }
+		            isReadyToJump = true;
+		        }
+			}
+			
+			return super.onSceneTouchEvent(event);
+		}
+		
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		// TODO Auto-generated method stub
-		if(event.getAction()==MotionEvent.ACTION_DOWN){
-			if (isLose) {
-	            reSet();
-	        }else{
-	            if (panda.status != Status.jump2) {
-//	            	AudioUtil.playJump();
-	            }
-	            isReadyToJump = true;
-	        }
-		}
-		LayerManager.getInstance().onTouchLayers(event);
+//		if(event.getAction()==MotionEvent.ACTION_DOWN){
+//			if (isLose) {
+//	            reSet();
+//	        }else{
+//	            if (panda.status != Status.jump2) {
+////	            	AudioUtil.playJump();
+//	            }
+//	            isReadyToJump = true;
+//	        }
+//		}
+//		LayerManager.getInstance().onTouchLayers(event);
 		return true;
 	}
 	

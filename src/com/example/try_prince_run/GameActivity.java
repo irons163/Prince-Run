@@ -44,7 +44,7 @@ public class GameActivity extends Stage{
 //		LayerManager.setLayerBySenceIndex(1);
 //		Scene scene2 = new MyScene2(this, "b", 2, Scene.RESTART);
 		
-		sceneManager = new SceneManager();
+		sceneManager = SceneManager.getInstance();
 		sceneManager.addScene(scene);
 		sceneManager.addScene(scene2);
 		sceneManager.addScene(scene3);
